@@ -1,5 +1,10 @@
 # rota
 
+Rota Dünya; Türkiye'nin illerini, ilçelerini ve dünya ülkelerini keşfederken fotoğraf ve video anılarınızı harita üzerinde saklamanızı sağlayan Flutter uygulamasıdır.
+
+- [Destek](SUPPORT.md)
+- [Gizlilik Politikası](PRIVACY.md)
+
 A new Flutter project.
 
 ## Getting Started
