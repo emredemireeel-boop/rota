@@ -5,7 +5,9 @@ import 'package:countries_world_map/data/maps/world_map.dart';
 import 'turkey_screen.dart';
 import 'world_screen.dart';
 import 'media_map_screen.dart';
+import 'scratch_map_screen.dart';
 import '../services/memory_store.dart';
+import '../services/scratch_map_store.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,10 +23,15 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _cardsFade;
   late Animation<Offset> _turkeySlide;
   late Animation<Offset> _worldSlide;
+  late final Listenable _scratchProgress;
 
   @override
   void initState() {
     super.initState();
+    _scratchProgress = Listenable.merge([
+      ScratchMapStore.instance,
+      MemoryStore.instance,
+    ]);
     _ctrl = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2000),
@@ -199,7 +206,108 @@ class _SplashScreenState extends State<SplashScreen>
                       ],
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 12),
+                  Opacity(
+                    opacity: _cardsFade.value,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: AnimatedBuilder(
+                        animation: _scratchProgress,
+                        builder: (context, _) {
+                          final provinces = {
+                            ...ScratchMapStore.instance.provincePlates,
+                            ...MemoryStore.instance.visitedProvincePlates,
+                          };
+                          final countries = {
+                            ...ScratchMapStore.instance.countryCodes,
+                            ...MemoryStore.instance.visitedCountryCodes,
+                          };
+                          if (provinces.isNotEmpty) countries.add('TR');
+                          return Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => _goTo(const ScratchMapScreen()),
+                              borderRadius: BorderRadius.circular(18),
+                              child: Ink(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color(0xFF153F35),
+                                      Color(0xFF24745B),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(18),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(
+                                        0xFF153F35,
+                                      ).withValues(alpha: 0.2),
+                                      blurRadius: 16,
+                                      offset: const Offset(0, 7),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.12,
+                                        ),
+                                        borderRadius: BorderRadius.circular(13),
+                                      ),
+                                      child: const Icon(
+                                        Icons.auto_awesome_rounded,
+                                        color: Color(0xFFFFD166),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Gez Kazan Haritası',
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${provinces.length}/81 il • '
+                                            '${countries.length} ülke kazındı',
+                                            style: GoogleFonts.inter(
+                                              fontSize: 12,
+                                              color: Colors.white.withValues(
+                                                alpha: 0.7,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Opacity(
                     opacity: _cardsFade.value,
                     child: Padding(
