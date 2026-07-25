@@ -3,15 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Gezdiğiniz yerlerde fotoğraflı anılar oluşturabilmeniz için kamera erişimi gerekir.</string>
+	<string>Gezdiğiniz yerlerde fotoğraf ve video çekerek anı oluşturabilmeniz için kamera erişimi gerekir.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Gezi videolarınızı sesli kaydedebilmeniz için mikrofon erişimi gerekir.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Gezi anılarınıza galerinizden fotoğraf ekleyebilmeniz için fotoğraf arşivi erişimi gerekir.</string>
+	<string>Gezi anılarınıza galerinizden fotoğraf ve video ekleyebilmeniz için fotoğraf arşivi erişimi gerekir.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Seçtiğiniz gezi fotoğraflarını ve videolarını cihaz galerinize indirebilmek için erişim gerekir.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Rota</string>
+	<string>Rota Dünya</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -19,7 +21,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>rota</string>
+	<string>Rota Dünya</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -30,6 +32,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

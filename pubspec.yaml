@@ -1,5 +1,5 @@
 name: rota
-description: "Rota - Türkiye ve Dünya seyahat planlama uygulaması"
+description: "Rota Dünya - Türkiye ve dünya seyahat anıları uygulaması"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -40,5 +40,6 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/logo.png"
+  remove_alpha_ios: true
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: "assets/logo.png"

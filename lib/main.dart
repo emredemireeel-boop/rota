@@ -24,7 +24,7 @@ class RotaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rota',
+      title: 'Rota Dünya',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
