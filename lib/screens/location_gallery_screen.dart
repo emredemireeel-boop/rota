@@ -9,8 +9,14 @@ import '../widgets/memory_media.dart';
 class LocationGalleryScreen extends StatefulWidget {
   final String? locationKey;
   final String? title;
+  final MemoryScope? scope;
 
-  const LocationGalleryScreen({super.key, this.locationKey, this.title});
+  const LocationGalleryScreen({
+    super.key,
+    this.locationKey,
+    this.title,
+    this.scope,
+  });
 
   @override
   State<LocationGalleryScreen> createState() => _LocationGalleryScreenState();
@@ -20,8 +26,11 @@ class _LocationGalleryScreenState extends State<LocationGalleryScreen> {
   bool _downloading = false;
 
   List<TravelMemory> _memories(MemoryStore store) {
-    if (widget.locationKey == null) return store.memories;
-    return store.forLocation(widget.locationKey!);
+    final memories = widget.locationKey == null
+        ? store.memories
+        : store.forLocation(widget.locationKey!);
+    if (widget.scope == null) return memories;
+    return memories.where((memory) => memory.scope == widget.scope).toList();
   }
 
   Future<void> _downloadOne(TravelMemory memory) async {
