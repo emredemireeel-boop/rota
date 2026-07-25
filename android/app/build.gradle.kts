@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.rota.rota"
+    namespace = "com.pudinglabs.rotaturkiye"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.rota.rota"
+        applicationId = "com.pudinglabs.rotaturkiye"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

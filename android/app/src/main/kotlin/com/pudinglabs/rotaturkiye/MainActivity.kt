@@ -1,4 +1,4 @@
-package com.rota.rota
+package com.pudinglabs.rotaturkiye
 
 import io.flutter.embedding.android.FlutterActivity
 
