@@ -23,6 +23,7 @@ dependencies:
   geocoding: ^5.0.0
   video_player: ^2.11.1
   gal: ^2.3.2
+  google_mobile_ads: ^9.0.0
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +36,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/fonts/
 
 flutter_launcher_icons:
   android: true

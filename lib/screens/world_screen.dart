@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../data/passport_data.dart';
 import '../services/memory_store.dart';
+import '../widgets/rota_banner_ad.dart';
 import '../widgets/world_map_widget.dart';
 import 'country_detail_screen.dart';
 
@@ -39,6 +40,7 @@ class _WorldScreenState extends State<WorldScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0F1923),
+      bottomNavigationBar: const RotaBannerAd(),
       body: CustomScrollView(
         slivers: [
           // Dark App Bar
@@ -58,13 +60,17 @@ class _WorldScreenState extends State<WorldScreen> {
               children: [
                 const Text('🇹🇷', style: TextStyle(fontSize: 22)),
                 const SizedBox(width: 8),
-                Text(
-                  'PASAPORT GÜÇ PANELİ',
-                  style: GoogleFonts.outfit(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 2,
+                Flexible(
+                  child: Text(
+                    'PASAPORT GÜÇ PANELİ',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.outfit(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      letterSpacing: 2,
+                    ),
                   ),
                 ),
               ],

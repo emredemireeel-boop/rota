@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
+import 'services/ad_mob_service.dart';
 import 'services/memory_store.dart';
 import 'services/scratch_map_store.dart';
 
@@ -20,8 +21,21 @@ Future<void> main() async {
   runApp(const RotaApp());
 }
 
-class RotaApp extends StatelessWidget {
+class RotaApp extends StatefulWidget {
   const RotaApp({super.key});
+
+  @override
+  State<RotaApp> createState() => _RotaAppState();
+}
+
+class _RotaAppState extends State<RotaApp> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AdMobService.instance.initialize();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

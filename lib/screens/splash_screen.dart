@@ -8,6 +8,7 @@ import 'media_map_screen.dart';
 import 'scratch_map_screen.dart';
 import '../services/memory_store.dart';
 import '../services/scratch_map_store.dart';
+import '../widgets/rota_banner_ad.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -85,6 +86,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const RotaBannerAd(),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

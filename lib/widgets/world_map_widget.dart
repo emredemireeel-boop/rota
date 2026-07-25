@@ -247,16 +247,20 @@ class _InteractiveWorldMapState extends State<InteractiveWorldMap> {
                   color: const Color(0xFFD4AF37),
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  'DÜNYA SİYASİ HARİTASI',
-                  style: GoogleFonts.outfit(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFFD4AF37),
-                    letterSpacing: 1.5,
+                Expanded(
+                  child: Text(
+                    'DÜNYA SİYASİ HARİTASI',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.outfit(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFFD4AF37),
+                      letterSpacing: 1.5,
+                    ),
                   ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 8),
                 Text(
                   'Vize Durumuna Göre',
                   style: GoogleFonts.inter(

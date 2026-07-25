@@ -7,6 +7,7 @@ import '../data/passport_data.dart';
 import '../data/turkey_data.dart';
 import '../services/memory_store.dart';
 import '../services/scratch_map_store.dart';
+import '../widgets/rota_banner_ad.dart';
 
 enum ScratchMapMode { turkey, world }
 
@@ -192,6 +193,7 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7F4),
+      bottomNavigationBar: const RotaBannerAd(),
       appBar: AppBar(
         backgroundColor: const Color(0xFF153F35),
         foregroundColor: Colors.white,

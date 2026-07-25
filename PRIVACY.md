@@ -4,16 +4,29 @@
 
 Rota Dünya, gezi anılarınızı cihazınızda düzenlemenize yardımcı olan kişisel bir seyahat uygulamasıdır. Gizliliğinizi önemsiyoruz ve uygulamayı mümkün olduğunca az veriyle çalışacak şekilde tasarladık.
 
-## Toplanan veriler
+## Yerel uygulama verileri
 
 Rota Dünya:
 
 - Hesap açmanızı istemez.
-- Reklam, kullanıcı takibi veya analiz sistemi kullanmaz.
 - Fotoğraf, video ya da gezi kayıtlarınızı geliştiriciye ait bir sunucuya yüklemez.
-- Kişisel verilerinizi satmaz veya reklam amacıyla üçüncü taraflarla paylaşmaz.
+- Gezi anılarınızı geliştiriciye ait bir kullanıcı hesabıyla ilişkilendirmez.
 
 Uygulamada seçtiğiniz ülke, il, ilçe ve anı bilgileri yalnızca cihazınızdaki uygulama alanında saklanır.
+
+## Reklamlar ve Google AdMob
+
+Rota Dünya, uygulama içinde kişiselleştirilmemiş banner reklamlar göstermek için Google AdMob ve Google Mobile Ads SDK kullanır. Reklam hizmetinin çalışması, güvenliği, ölçümü ve iyileştirilmesi amacıyla Google tarafından aşağıdaki veri türleri işlenebilir:
+
+- IP adresinden tahmin edilen yaklaşık konum.
+- Reklam veya uygulama örneğiyle ilişkili cihaz tanımlayıcıları.
+- Görüntülenen reklamlar ve reklamlarla etkileşim gibi reklam verileri.
+- Uygulama açılışı ve reklam etkileşimi gibi ürün etkileşimleri.
+- Kilitlenme günlükleri, performans ve diğer tanılama bilgileri.
+
+Bu verilerin işlenmesi; kullanıcının bölgesine, cihaz ayarlarına ve verdiği gizlilik tercihlerine göre değişebilir. Rota Dünya, gerekli bölgelerde Google User Messaging Platform üzerinden izin formu gösterir ve izin durumu reklam isteğine uygun olmadan reklam yüklemez. Gerekli olduğunda uygulamadaki **Gizlilik seçenekleri** düğmesiyle tercihlerinizi daha sonra değiştirebilirsiniz.
+
+Rota Dünya geliştiricisi gezi fotoğraflarınızı, videolarınızı, il/ilçe seçimlerinizi veya kişisel anı notlarınızı AdMob'a göndermez. Google'ın verileri nasıl işlediği hakkında [Google Gizlilik Politikası](https://policies.google.com/privacy) ve [Google'ın reklam teknolojileri açıklaması](https://policies.google.com/technologies/ads) üzerinden bilgi alabilirsiniz.
 
 ## Fotoğraf, video ve cihaz izinleri
 
@@ -35,7 +48,7 @@ Anılarınız ve uygulama tercihleriniz cihazınızda kalır. Uygulamayı silmek
 
 ## Çocukların gizliliği
 
-Rota Dünya bilerek çocuklardan kişisel bilgi toplamaz. Uygulama hesap, sosyal paylaşım veya herkese açık içerik özelliği içermez.
+Rota Dünya çocukları hedefleyen bir uygulama değildir ve bilerek çocuklardan hesap bilgisi toplamaz. Uygulama hesap, sosyal paylaşım veya herkese açık içerik özelliği içermez.
 
 ## Değişiklikler
 

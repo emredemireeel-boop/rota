@@ -10,6 +10,7 @@ import '../data/turkey_data.dart';
 import '../models/travel_memory.dart';
 import '../services/memory_store.dart';
 import '../widgets/memory_media.dart';
+import '../widgets/rota_banner_ad.dart';
 import 'location_gallery_screen.dart';
 import 'media_composer_screen.dart';
 
@@ -147,6 +148,7 @@ class _MediaMapScreenState extends State<MediaMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const RotaBannerAd(),
       body: AnimatedBuilder(
         animation: MemoryStore.instance,
         builder: (context, _) {

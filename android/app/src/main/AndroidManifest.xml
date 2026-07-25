@@ -4,6 +4,12 @@
         android:label="Rota Dünya"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Android reklamları, Android'e özel AdMob kimlikleri eklenene kadar
+             uygulama kodunda kapalıdır. Bu test kimliği SDK başlatıcısının
+             Android derlemelerinde güvenli şekilde yüklenmesini sağlar. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../data/turkey_data.dart';
 import '../services/memory_store.dart';
+import '../widgets/rota_banner_ad.dart';
 import '../widgets/turkey_map_widget.dart';
 import 'province_detail_screen.dart';
 
@@ -54,6 +55,7 @@ class _TurkeyScreenState extends State<TurkeyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
+      bottomNavigationBar: const RotaBannerAd(),
       body: CustomScrollView(
         slivers: [
           // App Bar
