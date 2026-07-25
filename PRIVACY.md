@@ -16,7 +16,7 @@ Uygulamada seçtiğiniz ülke, il, ilçe ve anı bilgileri yalnızca cihazınız
 
 ## Reklamlar ve Google AdMob
 
-Rota Dünya, uygulama içinde kişiselleştirilmemiş banner reklamlar göstermek için Google AdMob ve Google Mobile Ads SDK kullanır. Reklam hizmetinin çalışması, güvenliği, ölçümü ve iyileştirilmesi amacıyla Google tarafından aşağıdaki veri türleri işlenebilir:
+Rota Dünya, uygulama içinde kişiselleştirilmemiş banner reklamlar ve başarılı medya kayıtları arasındaki doğal geçişlerde seyrek tam ekran geçiş reklamları göstermek için Google AdMob ve Google Mobile Ads SDK kullanır. Geçiş reklamları her işlemde gösterilmez; birkaç başarılı fotoğraf veya video kaydından sonra makul aralıklarla gösterilir. Reklam hizmetinin çalışması, güvenliği, ölçümü ve iyileştirilmesi amacıyla Google tarafından aşağıdaki veri türleri işlenebilir:
 
 - IP adresinden tahmin edilen yaklaşık konum.
 - Reklam veya uygulama örneğiyle ilişkili cihaz tanımlayıcıları.

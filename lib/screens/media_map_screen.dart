@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../data/turkey_data.dart';
 import '../models/travel_memory.dart';
+import '../services/interstitial_ad_service.dart';
 import '../services/memory_store.dart';
 import '../widgets/memory_media.dart';
 import '../widgets/rota_banner_ad.dart';
@@ -121,6 +122,9 @@ class _MediaMapScreenState extends State<MediaMapScreen> {
         builder: (_) => const MediaComposerScreen(),
       ),
     );
+    if (saved == true) {
+      await RotaInterstitialAdService.instance.registerSuccessfulMediaSave();
+    }
     if (saved == true && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

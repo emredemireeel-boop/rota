@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
 import 'services/ad_mob_service.dart';
+import 'services/interstitial_ad_service.dart';
 import 'services/memory_store.dart';
 import 'services/scratch_map_store.dart';
 
@@ -34,6 +35,7 @@ class _RotaAppState extends State<RotaApp> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AdMobService.instance.initialize();
+      RotaInterstitialAdService.instance.initialize();
     });
   }
 

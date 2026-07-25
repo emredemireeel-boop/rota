@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../models/travel_memory.dart';
 import '../models/memory_location.dart';
 import '../screens/media_composer_screen.dart';
+import '../services/interstitial_ad_service.dart';
 import '../services/memory_store.dart';
 
 export '../models/memory_location.dart';
@@ -27,6 +28,9 @@ Future<bool> showMemoryCaptureSheet(
       ),
     ),
   );
+  if (saved == true) {
+    await RotaInterstitialAdService.instance.registerSuccessfulMediaSave();
+  }
   return saved ?? false;
 }
 
