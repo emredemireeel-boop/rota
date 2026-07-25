@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
+import 'services/ad_free_purchase_service.dart';
 import 'services/ad_mob_service.dart';
 import 'services/interstitial_ad_service.dart';
 import 'services/memory_store.dart';
@@ -11,6 +12,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MemoryStore.instance.initialize();
   await ScratchMapStore.instance.initialize();
+  await AdFreePurchaseService.instance.initialize();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

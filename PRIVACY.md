@@ -28,6 +28,10 @@ Bu verilerin işlenmesi; kullanıcının bölgesine, cihaz ayarlarına ve verdi�
 
 Rota Dünya geliştiricisi gezi fotoğraflarınızı, videolarınızı, il/ilçe seçimlerinizi veya kişisel anı notlarınızı AdMob'a göndermez. Google'ın verileri nasıl işlediği hakkında [Google Gizlilik Politikası](https://policies.google.com/privacy) ve [Google'ın reklam teknolojileri açıklaması](https://policies.google.com/technologies/ads) üzerinden bilgi alabilirsiniz.
 
+## Uygulama içi satın alma
+
+İsterseniz App Store üzerinden sunulan tek seferlik **Reklamları Kaldır** satın alımıyla banner ve geçiş reklamlarını kalıcı olarak kapatabilirsiniz. Bu bir abonelik değildir. Ödeme, satın alma geçmişi ve geri yükleme işlemleri Apple tarafından yürütülür. Rota Dünya geliştiricisi ödeme kartı bilgilerinizi görmez veya saklamaz. Uygulama yalnızca reklamsız kullanım hakkının etkin olup olmadığını cihazınızda saklar; yeniden kurulum veya cihaz değişikliğinde App Store'daki **Satın alımı geri yükle** seçeneğini kullanabilirsiniz.
+
 ## Fotoğraf, video ve cihaz izinleri
 
 Rota Dünya aşağıdaki izinleri yalnızca ilgili özelliği kullandığınızda ister:

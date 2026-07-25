@@ -22,6 +22,10 @@ Anılarınız, fotoğraf ve videolarınız cihazınızda yerel olarak saklanır.
 
 Anı Haritası'ndan ilgili konuma dokunup galeriyi açın. İndirmek istediğiniz fotoğraf veya videonun kaydetme seçeneğini kullanın.
 
+### Reklamları nasıl kaldırırım?
+
+Ana ekrandaki taç simgesine dokunarak tek seferlik **Reklamları Kaldır** satın alımını yapabilirsiniz. Bu bir abonelik değildir. Daha önce satın aldıysanız aynı ekrandaki **Satın alımı geri yükle** seçeneğini kullanın.
+
 ### Uygulama verilerini nasıl silebilirim?
 
 Uygulamayı cihazdan kaldırdığınızda uygulama içindeki yerel veriler de silinir. Daha önce Fotoğraflar uygulamasına aktardığınız kopyaları ayrıca silmeniz gerekir.

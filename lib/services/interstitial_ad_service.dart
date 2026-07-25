@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'ad_free_purchase_service.dart';
 import 'ad_mob_service.dart';
 
 class RotaInterstitialAdService {
@@ -34,13 +35,23 @@ class RotaInterstitialAdService {
     if (_initialized || !AdMobService.instance.isSupported) return;
     _initialized = true;
     AdMobService.instance.addListener(_handleAdServiceChanged);
+    AdFreePurchaseService.instance.addListener(_handlePurchaseChanged);
     _loadIfPossible();
   }
 
   void _handleAdServiceChanged() => _loadIfPossible();
 
+  void _handlePurchaseChanged() {
+    if (AdFreePurchaseService.instance.isAdFree) {
+      unawaited(_disposeLoadedAd());
+    }
+  }
+
   Future<void> registerSuccessfulMediaSave() async {
-    if (!AdMobService.instance.isSupported) return;
+    if (!AdMobService.instance.isSupported ||
+        AdFreePurchaseService.instance.isAdFree) {
+      return;
+    }
 
     final preferences = await SharedPreferences.getInstance();
     final saveCount = (preferences.getInt(_saveCountKey) ?? 0) + 1;
@@ -134,7 +145,8 @@ class RotaInterstitialAdService {
   }
 
   void _loadIfPossible() {
-    if (!AdMobService.instance.adsReady ||
+    if (AdFreePurchaseService.instance.isAdFree ||
+        !AdMobService.instance.adsReady ||
         _loading ||
         _showing ||
         _interstitialAd != null) {

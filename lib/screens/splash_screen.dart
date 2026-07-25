@@ -8,6 +8,7 @@ import 'media_map_screen.dart';
 import 'scratch_map_screen.dart';
 import '../services/memory_store.dart';
 import '../services/scratch_map_store.dart';
+import '../widgets/ad_free_purchase_button.dart';
 import '../widgets/rota_banner_ad.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -138,13 +139,22 @@ class _SplashScreenState extends State<SplashScreen>
                     opacity: _cardsFade.value,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        'Rotan nereye?',
-                        style: GoogleFonts.outfit(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1A2B4A),
-                        ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Text(
+                            'Rotan nereye?',
+                            style: GoogleFonts.outfit(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF1A2B4A),
+                            ),
+                          ),
+                          const Align(
+                            alignment: Alignment.centerRight,
+                            child: AdFreePurchaseButton(),
+                          ),
+                        ],
                       ),
                     ),
                   ),

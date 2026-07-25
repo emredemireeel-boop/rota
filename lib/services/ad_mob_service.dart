@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'ad_free_purchase_service.dart';
+
 class AdMobService extends ChangeNotifier {
   AdMobService._();
 
@@ -16,7 +18,11 @@ class AdMobService extends ChangeNotifier {
   bool get privacyOptionsRequired => _privacyOptionsRequired;
 
   Future<void> initialize() async {
-    if (!isSupported || _initializationStarted) return;
+    if (!isSupported ||
+        _initializationStarted ||
+        AdFreePurchaseService.instance.isAdFree) {
+      return;
+    }
     _initializationStarted = true;
 
     final parameters = ConsentRequestParameters();
@@ -61,7 +67,9 @@ class AdMobService extends ChangeNotifier {
   }
 
   Future<void> _initializeAdsIfAllowed() async {
-    if (_adsReady || !await ConsentInformation.instance.canRequestAds()) {
+    if (AdFreePurchaseService.instance.isAdFree ||
+        _adsReady ||
+        !await ConsentInformation.instance.canRequestAds()) {
       return;
     }
     await MobileAds.instance.initialize();

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../services/ad_free_purchase_service.dart';
 import '../services/ad_mob_service.dart';
 
 class RotaBannerAd extends StatefulWidget {
@@ -25,6 +26,7 @@ class _RotaBannerAdState extends State<RotaBannerAd> {
   void initState() {
     super.initState();
     AdMobService.instance.addListener(_handleAdServiceChanged);
+    AdFreePurchaseService.instance.addListener(_handlePurchaseChanged);
   }
 
   @override
@@ -41,8 +43,21 @@ class _RotaBannerAdState extends State<RotaBannerAd> {
     });
   }
 
+  void _handlePurchaseChanged() {
+    if (!mounted) return;
+    if (AdFreePurchaseService.instance.isAdFree) {
+      final ad = _bannerAd;
+      _bannerAd = null;
+      _loadedWidth = null;
+      _loading = false;
+      ad?.dispose();
+    }
+    setState(() {});
+  }
+
   Future<void> _loadBannerIfReady() async {
     if (!mounted ||
+        AdFreePurchaseService.instance.isAdFree ||
         !AdMobService.instance.isSupported ||
         !AdMobService.instance.adsReady ||
         _loading) {
@@ -97,6 +112,7 @@ class _RotaBannerAdState extends State<RotaBannerAd> {
   @override
   void dispose() {
     AdMobService.instance.removeListener(_handleAdServiceChanged);
+    AdFreePurchaseService.instance.removeListener(_handlePurchaseChanged);
     _bannerAd?.dispose();
     super.dispose();
   }
@@ -104,7 +120,9 @@ class _RotaBannerAdState extends State<RotaBannerAd> {
   @override
   Widget build(BuildContext context) {
     final service = AdMobService.instance;
-    if (!service.isSupported) return const SizedBox.shrink();
+    if (!service.isSupported || AdFreePurchaseService.instance.isAdFree) {
+      return const SizedBox.shrink();
+    }
 
     final showPrivacy = service.privacyOptionsRequired;
     final ad = _bannerAd;
