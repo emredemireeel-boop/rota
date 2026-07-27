@@ -30,7 +30,7 @@ Rota Dünya geliştiricisi gezi fotoğraflarınızı, videolarınızı, il/ilçe
 
 ## Uygulama içi satın alma
 
-İsterseniz App Store üzerinden sunulan tek seferlik **Reklamları Kaldır** satın alımıyla banner ve geçiş reklamlarını kalıcı olarak kapatabilirsiniz. Bu bir abonelik değildir. Ödeme, satın alma geçmişi ve geri yükleme işlemleri Apple tarafından yürütülür. Rota Dünya geliştiricisi ödeme kartı bilgilerinizi görmez veya saklamaz. Uygulama yalnızca reklamsız kullanım hakkının etkin olup olmadığını cihazınızda saklar; yeniden kurulum veya cihaz değişikliğinde App Store'daki **Satın alımı geri yükle** seçeneğini kullanabilirsiniz.
+İsterseniz iOS sürümünde App Store üzerinden sunulan tek seferlik **Reklamları Kaldır** satın alımıyla banner ve geçiş reklamlarını kalıcı olarak kapatabilirsiniz. Bu bir abonelik değildir. Ödeme, satın alma geçmişi ve geri yükleme işlemleri Apple tarafından yürütülür. Rota Dünya geliştiricisi ödeme kartı bilgilerinizi görmez veya saklamaz. Uygulama yalnızca reklamsız kullanım hakkının etkin olup olmadığını cihazınızda saklar; yeniden kurulum veya cihaz değişikliğinde App Store'daki **Satın alımı geri yükle** seçeneğini kullanabilirsiniz. Android sürümünde uygulama içi satın alma sunulmaz.
 
 ## Fotoğraf, video ve cihaz izinleri
 
@@ -40,7 +40,7 @@ Rota Dünya aşağıdaki izinleri yalnızca ilgili özelliği kullandığınızd
 - **Mikrofon:** Video kaydederken ses kaydetmek için.
 - **Fotoğraf arşivi:** Mevcut fotoğraf ve videoları seçmek veya dışa aktardığınız medyayı cihaz galerinize kaydetmek için.
 
-Bu izinleri dilediğiniz zaman iOS Ayarlar uygulamasından değiştirebilirsiniz.
+Bu izinleri dilediğiniz zaman cihazınızın Ayarlar uygulamasından değiştirebilirsiniz.
 
 ## Harita ve ağ bağlantıları
 

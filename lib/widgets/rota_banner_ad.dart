@@ -13,14 +13,25 @@ class RotaBannerAd extends StatefulWidget {
 }
 
 class _RotaBannerAdState extends State<RotaBannerAd> {
-  static const _productionAdUnitId = 'ca-app-pub-2265053267835785/2632742624';
+  static const _iosProductionAdUnitId =
+      'ca-app-pub-2265053267835785/2632742624';
+  static const _androidProductionAdUnitId =
+      'ca-app-pub-6387001035314883/2590480216';
   static const _iosTestAdUnitId = 'ca-app-pub-3940256099942544/2435281174';
+  static const _androidTestAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
 
   BannerAd? _bannerAd;
   bool _loading = false;
   int? _loadedWidth;
 
-  String get _adUnitId => kReleaseMode ? _productionAdUnitId : _iosTestAdUnitId;
+  bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
+
+  String get _adUnitId {
+    if (kReleaseMode) {
+      return _isAndroid ? _androidProductionAdUnitId : _iosProductionAdUnitId;
+    }
+    return _isAndroid ? _androidTestAdUnitId : _iosTestAdUnitId;
+  }
 
   @override
   void initState() {

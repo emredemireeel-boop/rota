@@ -1,15 +1,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"/>
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
     <application
         android:label="Rota Dünya"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <!-- Android reklamları, Android'e özel AdMob kimlikleri eklenene kadar
-             uygulama kodunda kapalıdır. Bu test kimliği SDK başlatıcısının
-             Android derlemelerinde güvenli şekilde yüklenmesini sağlar. -->
+        <!-- Android'e özel AdMob uygulama kimliği. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-6387001035314883~2342802279" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

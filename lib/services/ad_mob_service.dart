@@ -13,7 +13,9 @@ class AdMobService extends ChangeNotifier {
   bool _privacyOptionsRequired = false;
 
   bool get isSupported =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.android);
   bool get adsReady => _adsReady;
   bool get privacyOptionsRequired => _privacyOptionsRequired;
 
