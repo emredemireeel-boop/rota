@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:countries_world_map/countries_world_map.dart';
 import 'package:district_picker_turkey_map/district_picker_turkey_map.dart';
 import '../data/turkey_data.dart';
+import 'turkey_province_labels.dart';
 
 class InteractiveTurkeyMap extends StatefulWidget {
   final Function(Province) onProvinceSelected;
@@ -361,11 +362,21 @@ class _InteractiveTurkeyMapState extends State<InteractiveTurkeyMap>
         child: InteractiveViewer(
           minScale: 1.0,
           maxScale: 10.0,
-          child: SimpleMap(
-            instructions: SMapTurkey.instructions,
-            defaultColor: const Color(0xFFE2E8F0),
-            colors: _buildColorMap(),
-            callback: _onProvinceTap,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              SimpleMap(
+                instructions: SMapTurkey.instructions,
+                defaultColor: const Color(0xFFE2E8F0),
+                colors: _buildColorMap(),
+                callback: _onProvinceTap,
+              ),
+              TurkeyProvinceLabels(
+                highlightedPlates: {
+                  if (_selectedProvince != null) _selectedProvince!.plateCode,
+                },
+              ),
+            ],
           ),
         ),
       ),

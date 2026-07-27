@@ -286,7 +286,7 @@ class _SplashScreenState extends State<SplashScreen>
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Gez Kazan Haritası',
+                                            'Gez Kazı Haritası',
                                             style: GoogleFonts.outfit(
                                               fontSize: 17,
                                               fontWeight: FontWeight.w700,

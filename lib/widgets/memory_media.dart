@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../models/travel_memory.dart';
 
@@ -22,23 +24,11 @@ class MemoryMediaThumbnail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (memory.isVideo) {
-      return Container(
+      return _VideoFrameThumbnail(
+        mediaPath: memory.mediaPath,
         width: width,
         height: height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF1C2F3A), Color(0xFF315767)],
-          ),
-        ),
-        child: const Center(
-          child: Icon(
-            Icons.play_circle_fill_rounded,
-            size: 48,
-            color: Colors.white,
-          ),
-        ),
+        fit: fit,
       );
     }
 
@@ -75,6 +65,118 @@ class MemoryMediaThumbnail extends StatelessWidget {
       height: height,
       color: const Color(0xFFE2E8F0),
       child: const Center(child: Icon(Icons.broken_image_outlined)),
+    );
+  }
+}
+
+class _VideoFrameThumbnail extends StatefulWidget {
+  final String mediaPath;
+  final double? width;
+  final double? height;
+  final BoxFit fit;
+
+  const _VideoFrameThumbnail({
+    required this.mediaPath,
+    required this.width,
+    required this.height,
+    required this.fit,
+  });
+
+  @override
+  State<_VideoFrameThumbnail> createState() => _VideoFrameThumbnailState();
+}
+
+class _VideoFrameThumbnailState extends State<_VideoFrameThumbnail> {
+  static const _cacheLimit = 120;
+  static final Map<String, Future<Uint8List?>> _thumbnailCache = {};
+
+  late Future<Uint8List?> _thumbnail;
+
+  @override
+  void initState() {
+    super.initState();
+    _thumbnail = _loadFrame();
+  }
+
+  @override
+  void didUpdateWidget(covariant _VideoFrameThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.mediaPath != widget.mediaPath) {
+      _thumbnail = _loadFrame();
+    }
+  }
+
+  Future<Uint8List?> _loadFrame() {
+    if (widget.mediaPath.isEmpty || !File(widget.mediaPath).existsSync()) {
+      return Future.value();
+    }
+
+    final cached = _thumbnailCache[widget.mediaPath];
+    if (cached != null) return cached;
+
+    if (_thumbnailCache.length >= _cacheLimit) {
+      _thumbnailCache.remove(_thumbnailCache.keys.first);
+    }
+    final future = VideoThumbnail.thumbnailData(
+      video: widget.mediaPath,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth: 720,
+      timeMs: 500,
+      quality: 82,
+    ).catchError((Object _) => null);
+    _thumbnailCache[widget.mediaPath] = future;
+    return future;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Uint8List?>(
+      future: _thumbnail,
+      builder: (context, snapshot) {
+        final bytes = snapshot.data;
+        if (bytes != null && bytes.isNotEmpty) {
+          return Image.memory(
+            bytes,
+            width: widget.width,
+            height: widget.height,
+            fit: widget.fit,
+            gaplessPlayback: true,
+          );
+        }
+        return _fallback(
+          loading: snapshot.connectionState != ConnectionState.done,
+        );
+      },
+    );
+  }
+
+  Widget _fallback({required bool loading}) {
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF1C2F3A), Color(0xFF315767)],
+        ),
+      ),
+      child: Center(
+        child: loading
+            ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+            : const Icon(
+                Icons.videocam_off_outlined,
+                size: 34,
+                color: Colors.white,
+              ),
+      ),
     );
   }
 }

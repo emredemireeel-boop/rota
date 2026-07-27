@@ -8,6 +8,7 @@ import '../data/turkey_data.dart';
 import '../services/memory_store.dart';
 import '../services/scratch_map_store.dart';
 import '../widgets/rota_banner_ad.dart';
+import '../widgets/turkey_province_labels.dart';
 
 enum ScratchMapMode { turkey, world }
 
@@ -47,10 +48,12 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
     ]);
   }
 
-  Set<int> get _visitedProvincePlates => {
-    ...ScratchMapStore.instance.provincePlates,
-    ...MemoryStore.instance.visitedProvincePlates,
-  };
+  Set<int> get _visitedProvincePlates {
+    return {
+      ...ScratchMapStore.instance.provincePlates,
+      ...MemoryStore.instance.visitedProvincePlates,
+    }..removeAll(ScratchMapStore.instance.hiddenProvincePlates);
+  }
 
   Set<String> get _visitedCountryCodes {
     final codes = {
@@ -62,6 +65,11 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
       ),
     };
     if (_visitedProvincePlates.isNotEmpty) codes.add('TR');
+    codes.removeAll(
+      ScratchMapStore.instance.hiddenCountryCodes.map(
+        (code) => code.toUpperCase(),
+      ),
+    );
     return codes;
   }
 
@@ -119,8 +127,20 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
   ) async {
     final province = _provinceForMapId(id, name);
     if (province == null) return;
+    await _toggleProvince(province);
+  }
+
+  Future<void> _toggleProvince(Province province) async {
     if (_visitedProvincePlates.contains(province.plateCode)) {
-      _showAlreadyVisited(province.name);
+      final confirmed = await _confirmRemove(province.name, 'il');
+      if (!confirmed) return;
+      await ScratchMapStore.instance.unvisitProvince(province.plateCode);
+      if (!mounted) return;
+      _showRemoveSuccess(
+        '${province.name} geri alındı.',
+        onRestore: () =>
+            ScratchMapStore.instance.scratchProvince(province.plateCode),
+      );
       return;
     }
 
@@ -130,7 +150,8 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
     if (!changed || !mounted) return;
     _showScratchSuccess(
       '${province.name} kazındı!',
-      onUndo: () => ScratchMapStore.instance.removeProvince(province.plateCode),
+      onUndo: () =>
+          ScratchMapStore.instance.unvisitProvince(province.plateCode),
     );
   }
 
@@ -142,8 +163,19 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
     final code = _countryCodeForMapId(id);
     if (!_worldCountryCodes.contains(code)) return;
     final displayName = _countryName(code, name);
+    await _toggleCountry(code, displayName);
+  }
+
+  Future<void> _toggleCountry(String code, String displayName) async {
     if (_visitedCountryCodes.contains(code)) {
-      _showAlreadyVisited(displayName);
+      final confirmed = await _confirmRemove(displayName, 'ülke');
+      if (!confirmed) return;
+      await ScratchMapStore.instance.unvisitCountry(code);
+      if (!mounted) return;
+      _showRemoveSuccess(
+        '$displayName geri alındı.',
+        onRestore: () => ScratchMapStore.instance.scratchCountry(code),
+      );
       return;
     }
 
@@ -151,19 +183,60 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
     if (!changed || !mounted) return;
     _showScratchSuccess(
       '$displayName kazındı!',
-      onUndo: () => ScratchMapStore.instance.removeCountry(code),
+      onUndo: () => ScratchMapStore.instance.unvisitCountry(code),
     );
   }
 
-  void _showAlreadyVisited(String name) {
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(
-        SnackBar(
-          content: Text('$name zaten Gez Kazan haritanda.'),
-          behavior: SnackBarBehavior.floating,
+  Future<bool> _confirmRemove(String name, String placeType) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(
+          Icons.undo_rounded,
+          color: Color(0xFFB45309),
+          size: 34,
         ),
+        title: const Text('Gez Kazı işaretini geri al'),
+        content: Text(
+          '$name için gezildi işaretini geri almak istediğinize emin misiniz? '
+          'Kayıtlı fotoğraf ve videolarınız silinmez.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Vazgeç'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFB45309),
+            ),
+            child: Text('$placeType işaretini geri al'),
+          ),
+        ],
+      ),
+    );
+    return result ?? false;
+  }
+
+  Future<void> _openPlaceSearch() async {
+    final place = await showSearch<_ScratchPlace?>(
+      context: context,
+      delegate: _ScratchPlaceSearchDelegate(
+        mode: _mode,
+        visitedProvincePlates: _visitedProvincePlates,
+        visitedCountryCodes: _visitedCountryCodes,
+      ),
+    );
+    if (place == null || !mounted) return;
+    if (place.mode == ScratchMapMode.turkey) {
+      final matches = turkeyProvinces.where(
+        (province) => province.plateCode == place.provincePlate,
       );
+      if (matches.isNotEmpty) await _toggleProvince(matches.first);
+    } else {
+      await _toggleCountry(place.countryCode!, place.name);
+    }
   }
 
   void _showScratchSuccess(String message, {required VoidCallback onUndo}) {
@@ -189,6 +262,18 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
       );
   }
 
+  void _showRemoveSuccess(String message, {required VoidCallback onRestore}) {
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: Text('$message Fotoğraf ve videoların korundu.'),
+          action: SnackBarAction(label: 'Yeniden ekle', onPressed: onRestore),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +283,7 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
         backgroundColor: const Color(0xFF153F35),
         foregroundColor: Colors.white,
         title: Text(
-          'Gez Kazan Haritası',
+          'Gez Kazı Haritası',
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.w800,
             color: Colors.white,
@@ -232,11 +317,14 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
                 mode: _mode,
                 onChanged: (mode) => setState(() => _mode = mode),
               ),
+              const SizedBox(height: 12),
+              _PlaceSearchButton(mode: _mode, onTap: _openPlaceSearch),
               const SizedBox(height: 14),
               _ScratchMapCard(
                 mode: _mode,
                 turkeyColors: _turkeyColors(provinces),
                 worldColors: _worldColors(countries),
+                visitedProvincePlates: provinces,
                 visitedCount: currentCount,
                 onProvinceTap: _scratchProvince,
                 onCountryTap: _scratchCountry,
@@ -443,10 +531,59 @@ class _ModeButton extends StatelessWidget {
   }
 }
 
+class _PlaceSearchButton extends StatelessWidget {
+  final ScratchMapMode mode;
+  final VoidCallback onTap;
+
+  const _PlaceSearchButton({required this.mode, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final isTurkey = mode == ScratchMapMode.turkey;
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(17),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(17),
+        child: Container(
+          height: 54,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFFDDE6E1)),
+            borderRadius: BorderRadius.circular(17),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.search_rounded, color: Color(0xFF153F35)),
+              const SizedBox(width: 11),
+              Expanded(
+                child: Text(
+                  isTurkey ? 'İl adı veya plaka ara' : 'Ülke adı ara',
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF71807C),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: Color(0xFFA2AEA9),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _ScratchMapCard extends StatelessWidget {
   final ScratchMapMode mode;
   final Map<String, Color> turkeyColors;
   final Map<String, Color> worldColors;
+  final Set<int> visitedProvincePlates;
   final int visitedCount;
   final void Function(String, String, TapUpDetails) onProvinceTap;
   final void Function(String, String, TapUpDetails) onCountryTap;
@@ -455,6 +592,7 @@ class _ScratchMapCard extends StatelessWidget {
     required this.mode,
     required this.turkeyColors,
     required this.worldColors,
+    required this.visitedProvincePlates,
     required this.visitedCount,
     required this.onProvinceTap,
     required this.onCountryTap,
@@ -509,14 +647,23 @@ class _ScratchMapCard extends StatelessWidget {
               maxScale: isTurkey ? 9 : 7,
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 260),
-                child: SimpleMap(
+                child: Stack(
                   key: ValueKey('${mode.name}:$visitedCount'),
-                  instructions: isTurkey
-                      ? SMapTurkey.instructions
-                      : SMapWorld.instructions,
-                  defaultColor: const Color(0xFFD5DBDF),
-                  colors: isTurkey ? turkeyColors : worldColors,
-                  callback: isTurkey ? onProvinceTap : onCountryTap,
+                  fit: StackFit.expand,
+                  children: [
+                    SimpleMap(
+                      instructions: isTurkey
+                          ? SMapTurkey.instructions
+                          : SMapWorld.instructions,
+                      defaultColor: const Color(0xFFD5DBDF),
+                      colors: isTurkey ? turkeyColors : worldColors,
+                      callback: isTurkey ? onProvinceTap : onCountryTap,
+                    ),
+                    if (isTurkey)
+                      TurkeyProvinceLabels(
+                        highlightedPlates: visitedProvincePlates,
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -660,4 +807,171 @@ class _VisitedPlaces extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ScratchPlace {
+  final ScratchMapMode mode;
+  final String name;
+  final String subtitle;
+  final int? provincePlate;
+  final String? countryCode;
+
+  _ScratchPlace.province(Province province)
+    : mode = ScratchMapMode.turkey,
+      name = province.name,
+      subtitle = '${province.plateCode} plaka • ${province.region}',
+      provincePlate = province.plateCode,
+      countryCode = null;
+
+  const _ScratchPlace.country({
+    required this.name,
+    required this.subtitle,
+    required String code,
+  }) : mode = ScratchMapMode.world,
+       provincePlate = null,
+       countryCode = code;
+}
+
+class _ScratchPlaceSearchDelegate extends SearchDelegate<_ScratchPlace?> {
+  final ScratchMapMode mode;
+  final Set<int> visitedProvincePlates;
+  final Set<String> visitedCountryCodes;
+
+  _ScratchPlaceSearchDelegate({
+    required this.mode,
+    required this.visitedProvincePlates,
+    required this.visitedCountryCodes,
+  }) : super(
+         searchFieldLabel: mode == ScratchMapMode.turkey
+             ? 'İl adı veya plaka yaz'
+             : 'Ülke adı yaz',
+         keyboardType: TextInputType.text,
+       );
+
+  List<_ScratchPlace> get _places {
+    if (mode == ScratchMapMode.turkey) {
+      final provinces = [...turkeyProvinces]
+        ..sort((a, b) => a.name.compareTo(b.name));
+      return provinces.map(_ScratchPlace.province).toList();
+    }
+
+    final places = <_ScratchPlace>[
+      const _ScratchPlace.country(
+        name: 'Türkiye',
+        subtitle: 'Avrupa • Asya',
+        code: 'TR',
+      ),
+      ..._countriesByCode.entries
+          .where(
+            (entry) =>
+                entry.key != 'TR' && _worldCountryCodes.contains(entry.key),
+          )
+          .map(
+            (entry) => _ScratchPlace.country(
+              name: entry.value.name,
+              subtitle: entry.value.continent,
+              code: entry.key,
+            ),
+          ),
+    ];
+    places.sort((a, b) => a.name.compareTo(b.name));
+    return places;
+  }
+
+  List<_ScratchPlace> get _filteredPlaces {
+    final normalizedQuery = _normalizeSearch(query);
+    if (normalizedQuery.isEmpty) return _places;
+    return _places.where((place) {
+      final plate = place.provincePlate?.toString() ?? '';
+      return _normalizeSearch(place.name).contains(normalizedQuery) ||
+          _normalizeSearch(place.subtitle).contains(normalizedQuery) ||
+          plate == normalizedQuery;
+    }).toList();
+  }
+
+  bool _isVisited(_ScratchPlace place) {
+    if (place.mode == ScratchMapMode.turkey) {
+      return visitedProvincePlates.contains(place.provincePlate);
+    }
+    return visitedCountryCodes.contains(place.countryCode);
+  }
+
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      if (query.isNotEmpty)
+        IconButton(
+          tooltip: 'Temizle',
+          onPressed: () => query = '',
+          icon: const Icon(Icons.close_rounded),
+        ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      tooltip: 'Geri',
+      onPressed: () => close(context, null),
+      icon: const Icon(Icons.arrow_back_rounded),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) => _buildPlaceList();
+
+  @override
+  Widget buildSuggestions(BuildContext context) => _buildPlaceList();
+
+  Widget _buildPlaceList() {
+    final places = _filteredPlaces;
+    if (places.isEmpty) {
+      return const Center(child: Text('Aradığın yer bulunamadı.'));
+    }
+
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemCount: places.length,
+      separatorBuilder: (_, _) => const Divider(height: 1, indent: 68),
+      itemBuilder: (context, index) {
+        final place = places[index];
+        final visited = _isVisited(place);
+        return ListTile(
+          leading: CircleAvatar(
+            backgroundColor: visited
+                ? const Color(0xFFE4F6EC)
+                : const Color(0xFFF0F3F2),
+            child: Icon(
+              visited ? Icons.check_rounded : Icons.location_on_outlined,
+              color: visited
+                  ? const Color(0xFF22A06B)
+                  : const Color(0xFF71807C),
+            ),
+          ),
+          title: Text(
+            place.name,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          subtitle: Text(
+            visited
+                ? '${place.subtitle} • Gezildi; geri almak için seç'
+                : '${place.subtitle} • Gez Kazı’ya ekle',
+          ),
+          onTap: () => close(context, place),
+        );
+      },
+    );
+  }
+}
+
+String _normalizeSearch(String value) {
+  return value
+      .trim()
+      .toLowerCase()
+      .replaceAll('ç', 'c')
+      .replaceAll('ğ', 'g')
+      .replaceAll('ı', 'i')
+      .replaceAll('ö', 'o')
+      .replaceAll('ş', 's')
+      .replaceAll('ü', 'u');
 }

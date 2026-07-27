@@ -9,7 +9,7 @@ void main() {
     await tester.pumpWidget(const RotaApp());
     expect(find.text('Rotan nereye?'), findsOneWidget);
     expect(find.text('Medya Haritam'), findsOneWidget);
-    expect(find.text('Gez Kazan Haritası'), findsOneWidget);
+    expect(find.text('Gez Kazı Haritası'), findsOneWidget);
   });
 
   testWidgets('Media composer exposes photo and video choices', (
@@ -23,17 +23,42 @@ void main() {
     expect(find.text('Video seç'), findsOneWidget);
   });
 
-  testWidgets('Gez Kazan map switches between Turkey and world', (
+  testWidgets('Gez Kazı map switches between Turkey and world', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(
-      const RotaAppForTest(home: ScratchMapScreen()),
-    );
+    await tester.pumpWidget(const RotaAppForTest(home: ScratchMapScreen()));
 
     expect(find.text('Türkiye Yolculuğum'), findsOneWidget);
+    expect(find.text('İl adı veya plaka ara'), findsOneWidget);
     await tester.tap(find.text('Dünya'));
     await tester.pumpAndSettle();
     expect(find.text('Dünya Yolculuğum'), findsOneWidget);
+  });
+
+  testWidgets('Gezilmiş bir il aramadan seçilince geri alma onayı gösterilir', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const RotaAppForTest(home: ScratchMapScreen()));
+
+    await tester.tap(find.text('İl adı veya plaka ara'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Adana');
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ListTile, 'Adana'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('İl adı veya plaka ara'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Adana');
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ListTile, 'Adana'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Gez Kazı işaretini geri al'), findsOneWidget);
+    expect(
+      find.textContaining('Kayıtlı fotoğraf ve videolarınız silinmez'),
+      findsOneWidget,
+    );
   });
 }
 
