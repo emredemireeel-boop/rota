@@ -9,6 +9,10 @@ class AdFreePurchaseService extends ChangeNotifier {
 
   static final AdFreePurchaseService instance = AdFreePurchaseService._();
 
+  /// App Store Connect'teki Paid Apps Agreement yürürlüğe girene kadar
+  /// satın alma akışını uygulamada göstermeyiz ve StoreKit'e ürün sorgusu
+  /// göndermeyiz. Sözleşme tamamlandığında yeni bir sürümde açılabilir.
+  static const bool purchasesEnabled = false;
   static const productId = 'com.pudinglabs.rotaturkiye.remove_ads';
   static const _adFreeStorageKey = 'rota_ad_free_lifetime_v1';
 
@@ -24,7 +28,9 @@ class AdFreePurchaseService extends ChangeNotifier {
   String? _message;
 
   bool get isSupported =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+      purchasesEnabled &&
+      !kIsWeb &&
+      defaultTargetPlatform == TargetPlatform.iOS;
   bool get storeAvailable => _storeAvailable;
   bool get loadingProduct => _loadingProduct;
   bool get purchasing => _purchasing;
