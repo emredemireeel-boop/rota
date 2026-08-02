@@ -9,10 +9,10 @@
         android:label="Rota Dünya"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-        <!-- Android'e özel AdMob uygulama kimliği. -->
+        <!-- Demo sürümü: Google'ın resmi Android test uygulama kimliği. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6387001035314883~2342802279" />
+            android:value="ca-app-pub-3940256099942544~3347511713" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -14,10 +14,6 @@ class RotaInterstitialAdService {
   static final RotaInterstitialAdService instance =
       RotaInterstitialAdService._();
 
-  static const _iosProductionAdUnitId =
-      'ca-app-pub-2265053267835785/3323007762';
-  static const _androidProductionAdUnitId =
-      'ca-app-pub-6387001035314883/6728769840';
   static const _iosTestAdUnitId = 'ca-app-pub-3940256099942544/4411468910';
   static const _androidTestAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
   static const _saveCountKey = 'rota_interstitial_media_save_count_v1';
@@ -35,12 +31,8 @@ class RotaInterstitialAdService {
 
   bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
 
-  String get _adUnitId {
-    if (kReleaseMode) {
-      return _isAndroid ? _androidProductionAdUnitId : _iosProductionAdUnitId;
-    }
-    return _isAndroid ? _androidTestAdUnitId : _iosTestAdUnitId;
-  }
+  // Demo aşamasında release derlemesinde bile yalnızca Google test reklamı.
+  String get _adUnitId => _isAndroid ? _androidTestAdUnitId : _iosTestAdUnitId;
 
   void initialize() {
     if (_initialized || !AdMobService.instance.isSupported) return;

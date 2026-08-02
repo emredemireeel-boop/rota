@@ -7,9 +7,10 @@ import 'package:rota/screens/scratch_map_screen.dart';
 void main() {
   testWidgets('App starts', (WidgetTester tester) async {
     await tester.pumpWidget(const RotaApp());
-    expect(find.text('Rotan nereye?'), findsOneWidget);
-    expect(find.text('Medya Haritam'), findsOneWidget);
-    expect(find.text('Gez Kazı Haritası'), findsOneWidget);
+    expect(find.text('Rota Dünya'), findsOneWidget);
+    expect(find.text('Rotanı nerede büyüteceksin?'), findsOneWidget);
+    expect(find.text('Türkiye'), findsOneWidget);
+    expect(find.text('Dünya'), findsOneWidget);
   });
 
   testWidgets('Media composer exposes photo and video choices', (
@@ -28,11 +29,10 @@ void main() {
   ) async {
     await tester.pumpWidget(const RotaAppForTest(home: ScratchMapScreen()));
 
-    expect(find.text('Türkiye Yolculuğum'), findsOneWidget);
     expect(find.text('İl adı veya plaka ara'), findsOneWidget);
     await tester.tap(find.text('Dünya'));
     await tester.pumpAndSettle();
-    expect(find.text('Dünya Yolculuğum'), findsOneWidget);
+    expect(find.text('Ülke adı ara'), findsOneWidget);
   });
 
   testWidgets('Gezilmiş bir il aramadan seçilince geri alma onayı gösterilir', (

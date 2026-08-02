@@ -12,6 +12,7 @@ import '../services/interstitial_ad_service.dart';
 import '../services/memory_store.dart';
 import '../widgets/memory_media.dart';
 import '../widgets/rota_banner_ad.dart';
+import '../theme/rota_theme.dart';
 import 'location_gallery_screen.dart';
 import 'media_composer_screen.dart';
 
@@ -28,6 +29,7 @@ class MediaMapScreen extends StatefulWidget {
 
 class _MediaMapScreenState extends State<MediaMapScreen> {
   late MemoryMapMode _mode;
+  bool _favoritesOnly = false;
 
   @override
   void initState() {
@@ -51,10 +53,13 @@ class _MediaMapScreenState extends State<MediaMapScreen> {
   }
 
   List<TravelMemory> _visibleMemories(List<TravelMemory> memories) {
-    if (_mode == MemoryMapMode.world) return memories;
-    return memories
-        .where((memory) => memory.scope == MemoryScope.turkey)
-        .toList();
+    final scoped = _mode == MemoryMapMode.world
+        ? memories
+        : memories
+              .where((memory) => memory.scope == MemoryScope.turkey)
+              .toList();
+    if (!_favoritesOnly) return scoped;
+    return scoped.where((memory) => memory.isFavorite).toList();
   }
 
   List<_MemoryPlace> _places(List<TravelMemory> memories) {
@@ -106,9 +111,9 @@ class _MediaMapScreenState extends State<MediaMapScreen> {
     return 7;
   }
 
-  String get _title => _mode == MemoryMapMode.turkey
-      ? 'Türkiye Anı Haritası'
-      : 'Dünya Anı Haritası';
+  String get _title => 'Medya Haritam';
+
+  String get _scopeTitle => _mode == MemoryMapMode.turkey ? 'Türkiye' : 'Dünya';
 
   String get _emptyMessage => _mode == MemoryMapMode.turkey
       ? 'Türkiye haritana ilk anını bırak'
@@ -242,30 +247,53 @@ class _MediaMapScreenState extends State<MediaMapScreen> {
                                   horizontal: 14,
                                   vertical: 10,
                                 ),
-                                decoration: _floatingDecoration(
-                                  const Color(0xFF183D3D),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                decoration: _floatingDecoration(RotaColors.ink),
+                                child: Row(
                                   children: [
-                                    Text(
-                                      _title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _title,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            '$_scopeTitle • ${places.length} konum • '
+                                            '${memories.length} anı',
+                                            style: GoogleFonts.inter(
+                                              fontSize: 10,
+                                              color: Colors.white.withValues(
+                                                alpha: 0.72,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Text(
-                                      '${places.length} konum • '
-                                      '${memories.length} anı',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11,
-                                        color: Colors.white.withValues(
-                                          alpha: 0.72,
+                                    InkResponse(
+                                      onTap: () => setState(
+                                        () => _favoritesOnly = !_favoritesOnly,
+                                      ),
+                                      radius: 22,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Icon(
+                                          _favoritesOnly
+                                              ? Icons.favorite_rounded
+                                              : Icons.favorite_border_rounded,
+                                          size: 21,
+                                          color: _favoritesOnly
+                                              ? RotaColors.gold
+                                              : Colors.white,
                                         ),
                                       ),
                                     ),
@@ -286,6 +314,35 @@ class _MediaMapScreenState extends State<MediaMapScreen> {
                           mode: _mode,
                           onChanged: (mode) => setState(() => _mode = mode),
                         ),
+                        if (_favoritesOnly) ...[
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 7,
+                            ),
+                            decoration: _floatingDecoration(RotaColors.paper),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.favorite_rounded,
+                                  size: 15,
+                                  color: RotaColors.terracotta,
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  'Yalnızca favori anılar gösteriliyor',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: RotaColors.ink,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -359,7 +416,7 @@ class _MediaMapScreenState extends State<MediaMapScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: const Color(0xFF183D3D),
+        backgroundColor: RotaColors.ink,
         foregroundColor: Colors.white,
         onPressed: _add,
         icon: const Icon(Icons.add_a_photo_rounded),
@@ -399,7 +456,7 @@ class _MapIconButton extends StatelessWidget {
     return IconButton.filled(
       style: IconButton.styleFrom(
         backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF183D3D),
+        foregroundColor: RotaColors.ink,
         shadowColor: Colors.black.withValues(alpha: 0.2),
         elevation: 4,
       ),
@@ -462,7 +519,7 @@ class _MapModeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Material(
-        color: selected ? const Color(0xFF183D3D) : Colors.transparent,
+        color: selected ? RotaColors.ink : Colors.transparent,
         borderRadius: BorderRadius.circular(13),
         child: InkWell(
           borderRadius: BorderRadius.circular(13),
@@ -527,7 +584,7 @@ class _MapMemoryMarker extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF183D3D), width: 3),
+                border: Border.all(color: RotaColors.ink, width: 3),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.24),
@@ -563,7 +620,7 @@ class _MapMemoryMarker extends StatelessWidget {
                         alignment: Alignment.center,
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: const BoxDecoration(
-                          color: Color(0xFFB56D40),
+                          color: RotaColors.terracotta,
                           shape: BoxShape.circle,
                         ),
                         child: Text(
@@ -595,7 +652,7 @@ class _MarkerTipPainter extends CustomPainter {
       ..lineTo(size.width, 0)
       ..lineTo(size.width / 2, size.height)
       ..close();
-    canvas.drawPath(path, Paint()..color = const Color(0xFF183D3D));
+    canvas.drawPath(path, Paint()..color = RotaColors.ink);
   }
 
   @override

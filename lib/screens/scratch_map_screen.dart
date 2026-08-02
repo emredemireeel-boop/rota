@@ -8,6 +8,7 @@ import '../data/turkey_data.dart';
 import '../services/memory_store.dart';
 import '../services/scratch_map_store.dart';
 import '../widgets/rota_banner_ad.dart';
+import '../theme/rota_theme.dart';
 import '../widgets/turkey_province_labels.dart';
 
 enum ScratchMapMode { turkey, world }
@@ -277,67 +278,130 @@ class _ScratchMapScreenState extends State<ScratchMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F7F4),
+      backgroundColor: RotaColors.cream,
       bottomNavigationBar: const RotaBannerAd(),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF153F35),
-        foregroundColor: Colors.white,
-        title: Text(
-          'Gez Kazı Haritası',
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w800,
-            color: Colors.white,
-          ),
+      body: SafeArea(
+        child: AnimatedBuilder(
+          animation: _progressListenable,
+          builder: (context, _) {
+            final provinces = _visitedProvincePlates;
+            final countries = _visitedCountryCodes
+                .where(_worldCountryCodes.contains)
+                .toSet();
+            final currentCount = _mode == ScratchMapMode.turkey
+                ? provinces.length
+                : countries.length;
+            final totalCount = _mode == ScratchMapMode.turkey
+                ? turkeyProvinces.length
+                : _worldCountryCodes.length;
+
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+              children: [
+                _JourneyHeader(onBack: () => Navigator.pop(context)),
+                const SizedBox(height: 12),
+                _ModeSelector(
+                  mode: _mode,
+                  onChanged: (mode) => setState(() => _mode = mode),
+                ),
+                const SizedBox(height: 12),
+                _PlaceSearchButton(mode: _mode, onTap: _openPlaceSearch),
+                const SizedBox(height: 14),
+                _ScratchMapCard(
+                  mode: _mode,
+                  turkeyColors: _turkeyColors(provinces),
+                  worldColors: _worldColors(countries),
+                  visitedProvincePlates: provinces,
+                  visitedCount: currentCount,
+                  onProvinceTap: _scratchProvince,
+                  onCountryTap: _scratchCountry,
+                ),
+                const SizedBox(height: 14),
+                _ProgressHero(
+                  mode: _mode,
+                  currentCount: currentCount,
+                  totalCount: totalCount,
+                ),
+                const SizedBox(height: 14),
+                _VisitedPlaces(
+                  mode: _mode,
+                  provincePlates: provinces,
+                  countryCodes: countries,
+                ),
+              ],
+            );
+          },
         ),
       ),
-      body: AnimatedBuilder(
-        animation: _progressListenable,
-        builder: (context, _) {
-          final provinces = _visitedProvincePlates;
-          final countries = _visitedCountryCodes
-              .where(_worldCountryCodes.contains)
-              .toSet();
-          final currentCount = _mode == ScratchMapMode.turkey
-              ? provinces.length
-              : countries.length;
-          final totalCount = _mode == ScratchMapMode.turkey
-              ? turkeyProvinces.length
-              : _worldCountryCodes.length;
+    );
+  }
+}
 
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+class _JourneyHeader extends StatelessWidget {
+  final VoidCallback onBack;
+
+  const _JourneyHeader({required this.onBack});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 92,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            left: 56,
+            top: 8,
+            child: Icon(
+              Icons.air_rounded,
+              size: 27,
+              color: RotaColors.sage.withValues(alpha: 0.35),
+            ),
+          ),
+          Positioned(
+            right: 48,
+            bottom: 2,
+            child: Icon(
+              Icons.landscape_rounded,
+              size: 54,
+              color: RotaColors.sage.withValues(alpha: 0.22),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: IconButton.filledTonal(
+              onPressed: onBack,
+              tooltip: 'Geri',
+              style: IconButton.styleFrom(
+                backgroundColor: RotaColors.paper,
+                foregroundColor: RotaColors.ink,
+              ),
+              icon: const Icon(Icons.arrow_back_rounded),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _ProgressHero(
-                mode: _mode,
-                currentCount: currentCount,
-                totalCount: totalCount,
+              Text(
+                'Gez Kazı',
+                style: GoogleFonts.dmSerifDisplay(
+                  fontSize: 42,
+                  height: 1,
+                  color: RotaColors.ink,
+                ),
               ),
-              const SizedBox(height: 14),
-              _ModeSelector(
-                mode: _mode,
-                onChanged: (mode) => setState(() => _mode = mode),
-              ),
-              const SizedBox(height: 12),
-              _PlaceSearchButton(mode: _mode, onTap: _openPlaceSearch),
-              const SizedBox(height: 14),
-              _ScratchMapCard(
-                mode: _mode,
-                turkeyColors: _turkeyColors(provinces),
-                worldColors: _worldColors(countries),
-                visitedProvincePlates: provinces,
-                visitedCount: currentCount,
-                onProvinceTap: _scratchProvince,
-                onCountryTap: _scratchCountry,
-              ),
-              const SizedBox(height: 14),
-              _VisitedPlaces(
-                mode: _mode,
-                provincePlates: provinces,
-                countryCodes: countries,
+              const SizedBox(height: 6),
+              Text(
+                'Gezdiğin yerleri yeşile çevir',
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: RotaColors.forest,
+                ),
               ),
             ],
-          );
-        },
+          ),
+        ],
       ),
     );
   }
@@ -361,15 +425,12 @@ class _ProgressHero extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF153F35), Color(0xFF24745B)],
-        ),
+        color: RotaColors.paper,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: RotaColors.mist),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF153F35).withValues(alpha: 0.2),
+            color: RotaColors.ink.withValues(alpha: 0.1),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -384,12 +445,12 @@ class _ProgressHero extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
+                  color: RotaColors.mist,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: const Icon(
                   Icons.auto_awesome_rounded,
-                  color: Color(0xFFFFD166),
+                  color: RotaColors.forest,
                 ),
               ),
               const SizedBox(width: 12),
@@ -404,7 +465,7 @@ class _ProgressHero extends StatelessWidget {
                       style: GoogleFonts.outfit(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                        color: RotaColors.ink,
                       ),
                     ),
                     Text(
@@ -412,7 +473,7 @@ class _ProgressHero extends StatelessWidget {
                       '${mode == ScratchMapMode.turkey ? 'il' : 'ülke'} kazındı',
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: Colors.white.withValues(alpha: 0.72),
+                        color: RotaColors.textMuted,
                       ),
                     ),
                   ],
@@ -423,7 +484,7 @@ class _ProgressHero extends StatelessWidget {
                 style: GoogleFonts.outfit(
                   fontSize: 25,
                   fontWeight: FontWeight.w900,
-                  color: const Color(0xFFFFD166),
+                  color: RotaColors.forest,
                 ),
               ),
             ],
@@ -434,8 +495,8 @@ class _ProgressHero extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 9,
-              backgroundColor: Colors.white.withValues(alpha: 0.14),
-              valueColor: const AlwaysStoppedAnimation(Color(0xFFFFD166)),
+              backgroundColor: RotaColors.mist,
+              valueColor: const AlwaysStoppedAnimation(RotaColors.forest),
             ),
           ),
         ],
@@ -456,7 +517,7 @@ class _ModeSelector extends StatelessWidget {
       height: 50,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: RotaColors.paper,
         borderRadius: BorderRadius.circular(17),
         boxShadow: [
           BoxShadow(
@@ -502,7 +563,7 @@ class _ModeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Material(
-        color: selected ? const Color(0xFF153F35) : Colors.transparent,
+        color: selected ? RotaColors.ink : Colors.transparent,
         borderRadius: BorderRadius.circular(13),
         child: InkWell(
           borderRadius: BorderRadius.circular(13),
@@ -541,7 +602,7 @@ class _PlaceSearchButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final isTurkey = mode == ScratchMapMode.turkey;
     return Material(
-      color: Colors.white,
+      color: RotaColors.paper,
       borderRadius: BorderRadius.circular(17),
       child: InkWell(
         onTap: onTap,
@@ -604,9 +665,9 @@ class _ScratchMapCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 15, 12, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: RotaColors.sea,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE1E8E4)),
+        border: Border.all(color: Colors.white, width: 3),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -641,7 +702,7 @@ class _ScratchMapCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           SizedBox(
-            height: isTurkey ? 250 : 270,
+            height: isTurkey ? 315 : 330,
             child: InteractiveViewer(
               minScale: 1,
               maxScale: isTurkey ? 9 : 7,
@@ -655,7 +716,7 @@ class _ScratchMapCard extends StatelessWidget {
                       instructions: isTurkey
                           ? SMapTurkey.instructions
                           : SMapWorld.instructions,
-                      defaultColor: const Color(0xFFD5DBDF),
+                      defaultColor: const Color(0xFFE8E8E2),
                       colors: isTurkey ? turkeyColors : worldColors,
                       callback: isTurkey ? onProvinceTap : onCountryTap,
                     ),
