@@ -15,6 +15,8 @@ class RotaBannerAd extends StatefulWidget {
 class _RotaBannerAdState extends State<RotaBannerAd> {
   static const _iosTestAdUnitId = 'ca-app-pub-3940256099942544/2435281174';
   static const _androidTestAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
+  static const _iosProductionAdUnitId =
+      'ca-app-pub-2265053267835785/2632742624';
 
   BannerAd? _bannerAd;
   bool _loading = false;
@@ -22,9 +24,10 @@ class _RotaBannerAdState extends State<RotaBannerAd> {
 
   bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
 
-  // Play Console deneme süresinde release derlemesi de resmi Google test
-  // kimliklerini kullanır. Üretim kimlikleri bilinçli olarak burada tutulmaz.
-  String get _adUnitId => _isAndroid ? _androidTestAdUnitId : _iosTestAdUnitId;
+  // Android kapalı testte; iOS yayın derlemesi gerçek AdMob birimini kullanır.
+  String get _adUnitId => _isAndroid
+      ? _androidTestAdUnitId
+      : (kReleaseMode ? _iosProductionAdUnitId : _iosTestAdUnitId);
 
   @override
   void initState() {
@@ -145,7 +148,9 @@ class _RotaBannerAdState extends State<RotaBannerAd> {
               child: Row(
                 children: [
                   Text(
-                    'Demo reklam • Google test',
+                    _isAndroid || !kReleaseMode
+                        ? 'Demo reklam • Google test'
+                        : 'Reklam',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: const Color(0xFF64748B),
                     ),
