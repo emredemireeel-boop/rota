@@ -22,9 +22,9 @@ Anılarınız, fotoğraf ve videolarınız cihazınızda yerel olarak saklanır.
 
 Anı Haritası'ndan ilgili konuma dokunup galeriyi açın. İndirmek istediğiniz fotoğraf veya videonun kaydetme seçeneğini kullanın.
 
-### Reklamları nasıl kaldırırım?
+### Uygulamada satın alma var mı?
 
-Ana ekrandaki taç simgesine dokunarak tek seferlik **Reklamları Kaldır** satın alımını yapabilirsiniz. Bu bir abonelik değildir. Daha önce satın aldıysanız aynı ekrandaki **Satın alımı geri yükle** seçeneğini kullanın.
+İncelemeye hazırlanan 1.0.2 sürümünde uygulama içi satın alma veya abonelik sunulmaz. Reklam kaldırma ürünü bu başvurunun parçası değildir. Uygulama ücretsiz ve reklam desteklidir.
 
 ### Uygulama verilerini nasıl silebilirim?
 
@@ -33,7 +33,7 @@ Uygulamayı cihazdan kaldırdığınızda uygulama içindeki yerel veriler de si
 ## Uygulama bilgileri
 
 - Uygulama: Rota Dünya
-- Sürüm: 1.0
+- Sürüm: 1.0.2
 - Desteklenen sistem: iOS ve iPadOS 13.0 veya daha yeni
 
 [Gizlilik Politikası](PRIVACY.md)

@@ -1,6 +1,6 @@
 # Rota Dünya Gizlilik Politikası
 
-**Yürürlük tarihi: 25 Temmuz 2026**
+**Son güncelleme: 22 Ekim 2026**
 
 Rota Dünya, gezi anılarınızı cihazınızda düzenlemenize yardımcı olan kişisel bir seyahat uygulamasıdır. Gizliliğinizi önemsiyoruz ve uygulamayı mümkün olduğunca az veriyle çalışacak şekilde tasarladık.
 
@@ -30,7 +30,7 @@ Rota Dünya geliştiricisi gezi fotoğraflarınızı, videolarınızı, il/ilçe
 
 ## Uygulama içi satın alma
 
-İsterseniz iOS sürümünde App Store üzerinden sunulan tek seferlik **Reklamları Kaldır** satın alımıyla banner ve geçiş reklamlarını kalıcı olarak kapatabilirsiniz. Bu bir abonelik değildir. Ödeme, satın alma geçmişi ve geri yükleme işlemleri Apple tarafından yürütülür. Rota Dünya geliştiricisi ödeme kartı bilgilerinizi görmez veya saklamaz. Uygulama yalnızca reklamsız kullanım hakkının etkin olup olmadığını cihazınızda saklar; yeniden kurulum veya cihaz değişikliğinde App Store'daki **Satın alımı geri yükle** seçeneğini kullanabilirsiniz. Android sürümünde uygulama içi satın alma sunulmaz.
+İncelemeye hazırlanan 1.0.2 sürümünde uygulama içi satın alma veya abonelik sunulmaz. Uygulama ödeme kartı ya da banka hesabı bilgisi istemez. Önceden kaydedilmiş reklamsız kullanım tercihleri varsa cihazda yerel olarak tutulur.
 
 ## Fotoğraf, video ve cihaz izinleri
 
